@@ -11,7 +11,7 @@ const Header = () => {
         className="absolute flex flex-col items-start gap-[1.5vw] animate-fadeIn 
       max-w-[50%] wf bottom-[10%] left-[6vw] "
       >
-        <h2 className="font-semibold text-white  text-2xl  ">
+        <h2 className="font-semibold text-white  text-7xl leading-snug  ">
           Order your favourite foods here
         </h2>
         <p className="text-white text-lg leading-tight">
