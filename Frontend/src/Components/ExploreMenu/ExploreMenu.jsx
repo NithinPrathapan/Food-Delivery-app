@@ -1,7 +1,7 @@
 import React from "react";
 import { menu_list } from "./../../assets/assets.js";
 
-const ExploreMenu = () => {
+const ExploreMenu = ({ category, setCategory }) => {
   return (
     <div className="flex flex-col gap-[20px] " id="explore-menu ">
       <h1 className="text-[#262626] font-semibold text-2xl ">
@@ -15,9 +15,20 @@ const ExploreMenu = () => {
       <div className="flex justify-between items-center gap-[30px] text-center my-[20px]">
         {menu_list.map((item, index) => {
           return (
-            <div key={index}>
+            <div
+              onClick={() =>
+                setCategory((prev) =>
+                  prev === item.menu_name ? "All" : item.menu_name
+                )
+              }
+              key={index}
+            >
               <img
-                className="w-[7.5vw] min-w-[80px] cursor-pointer rounded-full transition-all duration-150"
+                className={
+                  category === item.menu_name
+                    ? "scale-105 w-[7.5vw] min-w-[80px] border-4 border-orange-500 cursor-pointer rounded-full transition-all duration-600 ease-in-out"
+                    : "w-[7.5vw] min-w-[80px] cursor-pointer rounded-full"
+                }
                 src={item.menu_image}
                 alt="menuimg"
               />
