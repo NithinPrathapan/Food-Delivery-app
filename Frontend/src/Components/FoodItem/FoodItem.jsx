@@ -1,17 +1,15 @@
 import React, { useContext, useState } from "react";
 import { assets } from "../../assets/assets";
-import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ item }) => {
   const [itemCount, setItemCount] = useState(0);
-  const { cartitems, addToCart, removeFromCart } = useContext(StoreContext);
   const { name, description, _id, price, category, image } = item;
   return (
     <div className="w-full m-auto rounded-[15px] shadow-md transition-all duration-200 animate-fadeIn ">
       <div className="relative">
         <img className="w-full rounded-[15px]" src={image} alt="foodimg" />
         {!itemCount ? (
-          <img 
+          <img
             className="cursor-pointer w-[35px] absolute bottom-4 right-1.5 rounded-full "
             onClick={() => setItemCount((prev) => prev + 1)}
             src={assets.add_icon_white}
