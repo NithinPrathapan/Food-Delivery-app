@@ -4,8 +4,6 @@ import { food_list } from "../../assets/assets";
 import { useSelector } from "react-redux";
 
 const FoodDisplay = () => {
-  const cart = useSelector((state) => state.cart);
-  console.log(cart)
   return (
     <div id="food-display " className="flex flex-col mx-0">
       <h2 className="text-2xl font-semibold flex my-3.5 ">

@@ -4,34 +4,30 @@ import { food_list } from ".././assets/assets.js";
 export const cartSlice = createSlice({
   name: "cart",
   initialState: [],
+  totalQuantity: 0,
   reducers: {
     addToCart: (state, action) => {
-      const itemInCart = state.cart.find(
-        (item) => item.id === action.payload.id
-      );
+      const itemInCart = state.find((item) => item._id === action.payload._id);
       if (itemInCart) {
         itemInCart.quantity++;
       } else {
-        state.cart.push({ ...action.payload, quantity: 1 });
+        state.push({ ...action.payload, quantity: 1 });
       }
     },
     incrementQuantity: (state, action) => {
-      const item = state.cart.find((item) => item.id === action.payload);
+      const item = state.find((item) => item._id === action.payload);
       item.quantity++;
     },
     decrementQuantity: (state, action) => {
-      const item = state.cart.find((item) => item.id === action.payload);
-      if (item.quantity === 1) {
-        item.quantity = 1;
+      const item = state.find((item) => item._id === action.payload);
+      if (item.quantity > 1) {
+        item.quantity -= 1;
       } else {
-        item.quantity--;
+        return state.filter((item) => item._id !== action.payload);
       }
     },
     removeItem: (state, action) => {
-      const removeItem = state.cart.filter(
-        (item) => item.id !== action.payload
-      );
-      state.cart = removeItem;
+      return state.filter((item) => item._id !== action.payload);
     },
   },
 });

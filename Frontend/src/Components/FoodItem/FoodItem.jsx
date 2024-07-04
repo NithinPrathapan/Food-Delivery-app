@@ -1,9 +1,33 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { assets } from "../../assets/assets";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  decrementQuantity,
+  incrementQuantity,
+} from "../../Redux/cartSlice";
 
 const FoodItem = ({ item }) => {
+  const dispatch = useDispatch();
   const [itemCount, setItemCount] = useState(0);
   const { name, description, _id, price, category, image } = item;
+
+  console.log(useSelector((state) => state.cart));
+  const handleAddToCart = () => {
+    setItemCount((prev) => prev + 1);
+    dispatch(addToCart(item));
+  };
+
+  const handleIncrement = () => {
+    setItemCount((prev) => prev + 1);
+    dispatch(incrementQuantity(_id));
+  };
+
+  const handleDecrement = () => {
+    setItemCount((prev) => prev - 1);
+    dispatch(decrementQuantity(_id));
+  };
+
   return (
     <div className="w-full m-auto rounded-[15px] shadow-md transition-all duration-200 animate-fadeIn ">
       <div className="relative">
@@ -11,7 +35,7 @@ const FoodItem = ({ item }) => {
         {!itemCount ? (
           <img
             className="cursor-pointer w-[35px] absolute bottom-4 right-1.5 rounded-full "
-            onClick={() => setItemCount((prev) => prev + 1)}
+            onClick={handleAddToCart}
             src={assets.add_icon_white}
             alt="ico"
           />
@@ -19,18 +43,14 @@ const FoodItem = ({ item }) => {
           <div className="absolute bottom-4 right-1.5 flex items-center gap-2 p-[6px] bg-[#ffffff] rounded-2xl   ">
             <img
               className="cursor-pointer w-[30px]"
-              onClick={() => {
-                setItemCount((prev) => prev - 1);
-              }}
+              onClick={handleDecrement}
               src={assets.remove_icon_red}
               alt="ico"
             />
             <p>{itemCount}</p>
             <img
               className="cursor-pointer w-[30px]"
-              onClick={() => {
-                setItemCount((prev) => prev + 1);
-              }}
+              onClick={handleIncrement}
               src={assets.add_icon_green}
               alt="ico"
             />
