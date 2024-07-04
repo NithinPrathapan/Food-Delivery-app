@@ -3,7 +3,7 @@ import { menu_list } from "./../../assets/assets.js";
 
 const ExploreMenu = ({ category, setCategory }) => {
   return (
-    <div className="flex flex-col gap-[20px] " id="explore-menu ">
+    <div className="flex flex-col  " id="explore-menu ">
       <h1 className="text-[#262626] font-semibold text-2xl ">
         Explore our menu
       </h1>
@@ -16,23 +16,21 @@ const ExploreMenu = ({ category, setCategory }) => {
         {menu_list.map((item, index) => {
           return (
             <div
-              onClick={() =>
-                setCategory((prev) =>
-                  prev === item.menu_name ? "All" : item.menu_name
-                )
+              onClick={(e) =>
+                setCategory((prev) => (prev === "All" ? item.menu_name : "All"))
               }
               key={index}
             >
               <img
                 className={
                   category === item.menu_name
-                    ? "scale-105 w-[7.5vw] min-w-[80px] border-4 border-orange-500 cursor-pointer rounded-full transition-all duration-600 ease-in-out"
+                    ? "scale-125 w-[7.5vw] min-w-[80px] border-4 border-orange-500 cursor-pointer rounded-full transition-all duration-600 ease-in-out"
                     : "w-[7.5vw] min-w-[80px] cursor-pointer rounded-full"
                 }
                 src={item.menu_image}
                 alt="menuimg"
               />
-              <p className="mt-[10px] text-[#747474] text-lg cursor-pointer">
+              <p className="mt-[10px] text-[#747474] text-xl py-2 font-semibold cursor-pointer">
                 {item.menu_name}
               </p>
             </div>

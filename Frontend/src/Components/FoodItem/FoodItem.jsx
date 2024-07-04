@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addToCart,
   decrementQuantity,
@@ -12,7 +12,6 @@ const FoodItem = ({ item }) => {
   const [itemCount, setItemCount] = useState(0);
   const { name, description, _id, price, category, image } = item;
 
-  console.log(useSelector((state) => state.cart));
   const handleAddToCart = () => {
     setItemCount((prev) => prev + 1);
     dispatch(addToCart(item));
