@@ -8,44 +8,64 @@ const Navbar = () => {
       <h1 className="text-red-500 font-bold tracking-widest sm:text-3xl text-2xl">
         doorDash
       </h1>
-      <ul className="flex font-outfit list-none text-[#49557e] gap-[20px] text-[18px]">
-        <li onMouseEnter={ ()=>setMenu("home")}
+      <ul className="md:flex font-outfit list-none hidden  text-[#49557e] gap-[20px] text-[18px]">
+        <li
+          onMouseEnter={() => setMenu("home")}
           className={
-            menu === "home" ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]" : ""
+            menu === "home"
+              ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
+              : ""
           }
         >
           home
         </li>
-        <li onMouseEnter={ ()=>setMenu("menu")}
+        <li
+          onMouseEnter={() => setMenu("menu")}
           className={
-            menu === "menu" ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]" : ""
+            menu === "menu"
+              ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
+              : ""
           }
         >
           menu
         </li>
-        <li onMouseEnter={ ()=>setMenu("mobile")}
+        <li
+          onMouseEnter={() => setMenu("mobile")}
           className={
-            menu === "mobile" ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]" : ""
+            menu === "mobile"
+              ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
+              : ""
           }
         >
           mobile_app
         </li>
-        <li onMouseEnter={ ()=>setMenu("contact")}
+        <li
+          onMouseEnter={() => setMenu("contact")}
           className={
-            menu === "contact" ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]" : ""
+            menu === "contact"
+              ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
+              : ""
           }
         >
           contact us
         </li>
       </ul>
-      <div className="flex items-center gap-[40px]">
-        <img src={assets.search_icon} alt="navbar" />
+      <div className="flex items-center md:gap-[40px] gap-2">
+        <img
+          className="w-[20px] sm:w-[30px]"
+          src={assets.search_icon}
+          alt="navbar"
+        />
         <div className="relative ">
-          <img src={assets.basket_icon} alt="" />
+          <img
+            className="w-[20px] sm:w-[30px]"
+            src={assets.basket_icon}
+            alt=""
+          />
           <div className="absolute min-w-[10px] min-h-[10px] bg-orange-500 rounded-[5px]  -top-2 right-0"></div>
         </div>
         <button
-          className="bg-transparent text-[16px] text-[#49557e] border border-orange-500
+          className="bg-transparent sm:text-[16px] text-[12px] text-[#49557e] border border-orange-500
         py-1 px-3 cursor-pointer rounded-full hover:bg-[#fff4f2] transition-all duration-300 ease-out"
         >
           Sign in
