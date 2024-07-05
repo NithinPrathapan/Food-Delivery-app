@@ -3,16 +3,16 @@ import { menu_list } from "./../../assets/assets.js";
 
 const ExploreMenu = ({ category, setCategory }) => {
   return (
-    <div className="flex flex-col  " id="explore-menu ">
+    <div className="flex flex-col max-w-[100%] " >
       <h1 className="text-[#262626] font-semibold text-2xl ">
         Explore our menu
       </h1>
-      <p className="max-w-[60%] text-[#808080] text-lg">
+      <p className="md:max-w-[60%]  text-[#808080] text-md md:text-lg">
         Discover a world of flavors with our carefully curated menu! From
         mouthwatering appetizers and savory main courses to delectable desserts
         and refreshing beverages
       </p>
-      <div className="flex justify-between items-center gap-[30px] text-center my-[20px]">
+      <div id="explore-menu " className="flex justify-between items-center gap-[30px] overflow-x-scroll text-center my-[20px] mx-4">
         {menu_list.map((item, index) => {
           return (
             <div
@@ -30,7 +30,7 @@ const ExploreMenu = ({ category, setCategory }) => {
                 src={item.menu_image}
                 alt="menuimg"
               />
-              <p className="mt-[10px] text-[#747474] text-xl py-2 font-semibold cursor-pointer">
+              <p className="mt-[10px] text-[#747474] md:text-xl py-2 font-semibold cursor-pointer">
                 {item.menu_name}
               </p>
             </div>

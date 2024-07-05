@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("home");
@@ -9,7 +10,8 @@ const Navbar = () => {
         doorDash
       </h1>
       <ul className="md:flex font-outfit list-none hidden  text-[#49557e] gap-[20px] text-[18px]">
-        <li
+        <Link
+          to="/"
           onMouseEnter={() => setMenu("home")}
           className={
             menu === "home"
@@ -18,8 +20,9 @@ const Navbar = () => {
           }
         >
           home
-        </li>
-        <li
+        </Link>
+        <a
+          href="#explore-menu"
           onMouseEnter={() => setMenu("menu")}
           className={
             menu === "menu"
@@ -28,8 +31,9 @@ const Navbar = () => {
           }
         >
           menu
-        </li>
-        <li
+        </a>
+        <a
+          href="#app-download"
           onMouseEnter={() => setMenu("mobile")}
           className={
             menu === "mobile"
@@ -38,8 +42,9 @@ const Navbar = () => {
           }
         >
           mobile_app
-        </li>
-        <li
+        </a>
+        <a
+          href="#footer"
           onMouseEnter={() => setMenu("contact")}
           className={
             menu === "contact"
@@ -48,7 +53,7 @@ const Navbar = () => {
           }
         >
           contact us
-        </li>
+        </a>
       </ul>
       <div className="flex items-center md:gap-[40px] gap-2">
         <img
