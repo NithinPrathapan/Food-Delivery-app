@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
   return (
     <div className="py-[20px] px-0 flex justify-between items-center">
@@ -70,6 +70,9 @@ const Navbar = () => {
           <div className="absolute min-w-[10px] min-h-[10px] bg-orange-500 rounded-[5px]  -top-2 right-0"></div>
         </div>
         <button
+          onClick={() => {
+            setShowLogin(true);
+          }}
           className="bg-transparent sm:text-[16px] text-[12px] text-[#49557e] border border-orange-500
         py-1 px-3 cursor-pointer rounded-full hover:bg-[#fff4f2] transition-all duration-300 ease-out"
         >

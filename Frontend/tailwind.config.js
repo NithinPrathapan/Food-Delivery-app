@@ -19,7 +19,7 @@ export default {
         },
       },
       animation: {
-        fadeIn: "fadeIn 3s ",
+        fadeIn: "fadeIn 1s ease-in-out ",
       },
     },
   },
