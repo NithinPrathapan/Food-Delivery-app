@@ -3,7 +3,7 @@ import { food_list } from ".././assets/assets.js";
 
 export const cartSlice = createSlice({
   name: "cart",
-  initialState: food_list,
+  initialState: [],
   totalQuantity: 0,
   reducers: {
     addToCart: (state, action) => {

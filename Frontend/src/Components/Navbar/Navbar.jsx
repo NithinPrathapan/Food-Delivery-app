@@ -3,16 +3,20 @@ import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 
 const Navbar = ({ setShowLogin }) => {
-  const [menu, setMenu] = useState("home");
+  const [menu, setMenu] = useState("");
   return (
     <div className="py-[20px] px-0 flex justify-between items-center">
-      <h1 className="text-red-500 font-bold tracking-widest sm:text-3xl text-2xl">
-        doorDash
-      </h1>
+      <Link to="/">
+        {" "}
+        <h1 className="text-red-500 font-bold tracking-widest sm:text-3xl text-2xl">
+          doorDash
+        </h1>
+      </Link>
       <ul className="md:flex font-outfit list-none hidden  text-[#49557e] gap-[20px] text-[18px]">
         <Link
           to="/"
           onMouseEnter={() => setMenu("home")}
+          
           className={
             menu === "home"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -24,6 +28,7 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#explore-menu"
           onMouseEnter={() => setMenu("menu")}
+          
           className={
             menu === "menu"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -35,6 +40,7 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#app-download"
           onMouseEnter={() => setMenu("mobile")}
+          
           className={
             menu === "mobile"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -46,6 +52,7 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#footer"
           onMouseEnter={() => setMenu("contact")}
+          
           className={
             menu === "contact"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -62,11 +69,14 @@ const Navbar = ({ setShowLogin }) => {
           alt="navbar"
         />
         <div className="relative ">
-          <img
-            className="w-[20px] sm:w-[30px]"
-            src={assets.basket_icon}
-            alt=""
-          />
+          <Link to="/cart">
+            {" "}
+            <img
+              className="w-[20px] sm:w-[30px] cursor-pointer"
+              src={assets.basket_icon}
+              alt=""
+            />
+          </Link>
           <div className="absolute min-w-[10px] min-h-[10px] bg-orange-500 rounded-[5px]  -top-2 right-0"></div>
         </div>
         <button

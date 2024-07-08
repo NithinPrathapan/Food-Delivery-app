@@ -1,9 +1,9 @@
 import React from "react";
 import FoodItem from "../FoodItem/FoodItem";
-import { useSelector } from "react-redux";
+import { food_list } from "../../assets/assets";
+
 
 const FoodDisplay = ({ category }) => {
-  const food_list = useSelector((state) => state.cart);
   return (
     <div id="food-display " className="flex flex-col mx-0">
       <h2 className="text-2xl font-semibold flex my-3.5 ">
