@@ -5,19 +5,20 @@ import {
   decrementQuantity,
   incrementQuantity,
 } from "../../Redux/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartitems = useSelector((state) => state.cart);
   const [totalAmount, setTotalAmount] = useState(0);
-  console.log(totalAmount);
 
   useEffect(() => {
     getTotalCartAmount();
   }, [cartitems]);
   const getTotalCartAmount = () => {
     let amount = 0;
-    cartitems.map((item) => {
+    cartitems.forEach((item) => {
       amount += item.quantity * item.price;
     });
     setTotalAmount(amount);
@@ -48,7 +49,7 @@ const Cart = () => {
         <hr />
         {cartitems.map((item) => {
           return (
-            <div>
+            <div key={item._id}>
               <div
                 className=" sm:grid  sm:grid-cols-6 items-center justify-center text-center text-gray-500 my-[10px] mx-0 "
                 key={item._id}
@@ -107,7 +108,12 @@ const Cart = () => {
               <b>$ {totalAmount + 2}</b>
             </div>
           </div>
-          <button className="border-none text-white bg-orange-500  px-[12px] py-2 max-w-[300px] rounded-md font-semibold uppercase">
+          <button
+            onClick={() => {
+              navigate("/order");
+            }}
+            className="border-none text-white bg-orange-500  px-[12px] py-2 max-w-[300px] rounded-md font-semibold uppercase"
+          >
             Proceed to checkout
           </button>
         </div>

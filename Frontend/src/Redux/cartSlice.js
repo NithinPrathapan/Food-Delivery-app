@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { food_list } from ".././assets/assets.js";
 
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState: [],
   totalQuantity: 0,
+
   reducers: {
     addToCart: (state, action) => {
       const itemInCart = state.find((item) => item._id === action.payload._id);
@@ -31,6 +33,7 @@ export const cartSlice = createSlice({
     },
   },
 });
+
 
 export const { addToCart, incrementQuantity, decrementQuantity, removeItem } =
   cartSlice.actions;
