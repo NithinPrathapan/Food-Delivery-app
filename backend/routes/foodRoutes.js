@@ -4,5 +4,18 @@ import multer from "multer";
 
 const router = express.Router();
 
+// !image storage engine
 
-export default router
+const storage = multer.diskStorage({
+  destination: "uploads",
+  filename: (req, file, cb) => {
+    return cb(null, `${Date.now()} ${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// ?routes
+router.post("/add", upload.single("image"), addFood);
+
+export default router;

@@ -27,6 +27,7 @@ mongoose
   });
 
 //   api ed points
+app.use("/images", express.static("uploads"));
 
 app.use("/api/food", foodRouter);
 
