@@ -89,52 +89,61 @@ const Cart = () => {
           );
         })}
       </div>
-      <div className="mt-[80px] sm:flex flex flex-col-reverse sm:flex-col justify-between gap-20 ">
-        <div className="flex-1 flex flex-col gap-[20px]">
-          <h2 className="text-2xl  font-semibold">Cart Totals</h2>
-          <div className="">
-            <div className="flex justify-between text-[#555] my-3">
-              <p>Sub Total</p>
-              <p>$ {totalAmount}</p>
+      {cartitems.length > 0 ? (
+        <div className="mt-[80px] sm:flex flex flex-col-reverse sm:flex-col justify-between gap-20 ">
+          <div className="flex-1 flex flex-col gap-[20px]">
+            <h2 className="text-2xl  font-semibold">Cart Totals</h2>
+            <div className="">
+              <div className="flex justify-between text-[#555] my-3">
+                <p>Sub Total</p>
+                <p>$ {totalAmount}</p>
+              </div>
+              <hr className="my-[10px] mx-0" />
+              <div className="flex justify-between text-[#555] my-3">
+                <p>Delivery Chargers</p>
+                <p>{2}</p>
+              </div>
+              <hr className="my-[10px] mx-0" />
+              <div className="flex justify-between text-[#555] my-3">
+                <b>Total</b>
+                <b>$ {totalAmount + 2}</b>
+              </div>
             </div>
-            <hr className="my-[10px] mx-0" />
-            <div className="flex justify-between text-[#555] my-3">
-              <p>Delivery Chargers</p>
-              <p>{2}</p>
-            </div>
-            <hr className="my-[10px] mx-0" />
-            <div className="flex justify-between text-[#555] my-3">
-              <b>Total</b>
-              <b>$ {totalAmount + 2}</b>
+            <button
+              onClick={() => {
+                navigate("/order");
+              }}
+              className="border-none text-white bg-orange-500  px-[12px] py-2 max-w-[300px] rounded-md font-semibold uppercase"
+            >
+              Proceed to checkout
+            </button>
+          </div>
+          <div className="flex-1">
+            <div>
+              <p>If you have a promo code enter it here</p>
+              <div className="flex mt-[10px] items-center  justify-between text-[#555]  bg-[#eaeaea]  ">
+                <input
+                  className="bg-transparent border-none outline-none px-3"
+                  type="text"
+                  name=""
+                  placeholder="ENTER CODE HERE"
+                  id=""
+                />
+                <button className="bg-black text-white w-[200px] px-6 py-3 rounded-md">
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
-          <button
-            onClick={() => {
-              navigate("/order");
-            }}
-            className="border-none text-white bg-orange-500  px-[12px] py-2 max-w-[300px] rounded-md font-semibold uppercase"
-          >
-            Proceed to checkout
-          </button>
         </div>
-        <div className="flex-1">
-          <div>
-            <p>If you have a promo code enter it here</p>
-            <div className="flex mt-[10px] items-center  justify-between text-[#555]  bg-[#eaeaea]  ">
-              <input
-                className="bg-transparent border-none outline-none px-3"
-                type="text"
-                name=""
-                placeholder="ENTER CODE HERE"
-                id=""
-              />
-              <button className="bg-black text-white w-[200px] px-6 py-3 rounded-md">
-                Submit
-              </button>
-            </div>
-          </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center gap-3">
+          <h1 className="text-orange-500 text-2xl text-center flex justify-center my-[40px] font-bold tracking-widest">
+            Your Cart is empty
+          </h1>
+          <button className="bg-orange-500 text-white  px-6 py-2 rounded-md font-bold tracking-wider text-xl">See Items</button>
         </div>
-      </div>
+      )}
     </div>
   );
 };
