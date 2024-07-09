@@ -38,6 +38,7 @@ export const getAllFoods = async (req, res) => {
 export const removeFood = async (req, res) => {
   try {
     const food = await foodModel.findByIdAndDelete(req.params.id);
+    fs.unlink(`uploads/${food.image}`, () => {});
     res.status(200).json({ success: true, data: food });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
