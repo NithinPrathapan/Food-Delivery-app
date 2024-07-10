@@ -8,10 +8,10 @@ const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
-export const loginUser = async (req, res) => {};
-
 export const registerUser = async (req, res) => {
+  console.log("fn call");
   const { name, email, password } = req.body;
+  console.log(name, email, password);
   try {
     const existingUser = await userModel.findOne({ email: email });
     if (existingUser) {
@@ -38,11 +38,33 @@ export const registerUser = async (req, res) => {
     });
     await newUser.save();
     const token = createToken(newUser._id);
-    res.status(200).json({ success: true, message: "User saved", token });
+    res
+      .status(200)
+      .json({ success: true, message: "User saved", token: token });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to save user", error });
+    res.status(500).json({ success: false, message: "Failed to save user" });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.findOne({ email: email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "user not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(404).json({ success: false, message: "password mismatch" });
+    }
+    const token = createToken(user._id);
+    res.json({ success: true, token: token });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ success: false, message: "failed to login" });
   }
 };
