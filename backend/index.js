@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import foodRouter from "./routes/foodRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 //app config
 const app = express();
@@ -27,9 +28,10 @@ mongoose
   });
 
 //   api ed points
-app.use("/images", express.static("uploads"));
+app.use("/api/food/images", express.static("uploads"));
 
 app.use("/api/food", foodRouter);
+app.use("/api/user", userRouter);
 
 app.listen(port, () => {
   console.log("connected to port", port);
