@@ -2,9 +2,9 @@ import React from "react";
 import { assets } from "../../assets/assets";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const Add = () => {
-  const url = "http://localhost:5000";
+const Add = ({ url }) => {
   const [image, setImage] = useState(null);
   const [data, setData] = useState({
     name: "",
@@ -22,7 +22,7 @@ const Add = () => {
     formData.append("category", data.category);
     formData.append("image", image);
 
-    const response = await axios.post(`${url}/api/food/add`, formData);
+    const response = await axios.post(`${url}/add`, formData);
     if (response.data.success) {
       setData({
         name: "",
@@ -31,7 +31,9 @@ const Add = () => {
         category: "Salad",
       });
       setImage(null);
+      toast.success(response.data.message);
     } else {
+      toast.error(response.data.message);
     }
   };
 
@@ -42,7 +44,7 @@ const Add = () => {
     setData((data) => ({ ...data, [name]: value }));
   };
   return (
-    <div className="w-[70%] ml-[5vw] mt-[50px]  text-[#6d6d6d] text-[16px] ">
+    <div className="sm:w-[70%] w-[80%] ml-[5vw] sm:mt-[50px] mt-4  text-[#6d6d6d] text-[16px] text-sm ">
       <form action="" onSubmit={onSubmitHandler} className="flex-col">
         <div className="image">
           <p>Upload Image</p>
@@ -54,7 +56,7 @@ const Add = () => {
             />
           </label>
           <input
-            className="  "
+            className="w-[120px] cursor-pointer"
             onChange={(e) => {
               setImage(e.target.files[0]);
             }}
@@ -69,19 +71,19 @@ const Add = () => {
           <input
             onChange={onChangeHandler}
             value={data.name}
-            className="outline-none border-2 w-full rounded-md  p-[10px] "
+            className="outline-none border-2 min-w-full rounded-md  p-[10px] "
             type="text"
             name="name"
             required
             placeholder="Type here"
           />
         </div>
-        <div className=" rounded-md  max-w-[40%]">
-          <p>Product Description</p>
+        <div className=" rounded-md  max-w-[80%]">
+          <p className="min-w-full">Product Description</p>
           <textarea
             onChange={onChangeHandler}
             value={data.description}
-            className="p-[10px] outline-none border-2 w-full"
+            className="p-[10px] outline-none border-2 min-w-full "
             type="text"
             name="description"
             placeholder="Write content"
@@ -89,7 +91,7 @@ const Add = () => {
             required
           ></textarea>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="sm:flex  gap-4 items-center mr-4">
           <div className="flex flex-col ">
             <p>Product Category</p>
             <select
@@ -123,7 +125,7 @@ const Add = () => {
           </div>
         </div>
         <button
-          className="max-w-[150px] bg-black px-6 py-2 text-white font-semibold rounded-md mt-4"
+          className="max-w-[150px] bg-black px-6 py-2 text-white font-semibold rounded-md mt-4 mb-2"
           type="submit"
         >
           ADD
