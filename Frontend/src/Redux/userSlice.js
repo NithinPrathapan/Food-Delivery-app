@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useEffect } from "react";
 
+const token = localStorage.getItem("token") || null;
 const initialState = {
   userInfo: {},
-  userToken: null,
-  isAuthenticated: false,
+  userToken: token,
+  isAuthenticated: token ? true : false,
 };
-initialState.userToken = localStorage.getItem("token");
 export const userSlice = createSlice({
   name: "auth",
   initialState,
@@ -17,6 +18,7 @@ export const userSlice = createSlice({
       state.userToken = action.payload.token;
     },
     logoutSuccess: (state, action) => {
+      localStorage.clear();
       state.userInfo = null;
       state.isAuthenticated = false;
     },

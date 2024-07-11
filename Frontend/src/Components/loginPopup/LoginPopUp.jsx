@@ -6,6 +6,7 @@ import { loginSuccess } from "../../Redux/userSlice";
 
 const LoginPopUp = ({ setShowLogin }) => {
   const dispatch = useDispatch();
+
   const [token, setToken] = useState("");
   const url = "http://localhost:5000/api/user";
   const [currentState, setCurrentState] = useState("Login");
@@ -30,6 +31,7 @@ const LoginPopUp = ({ setShowLogin }) => {
         dispatch(loginSuccess(response.data));
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
+        setShowLogin(false);
       } catch (error) {
         console.log(error);
       }
@@ -39,6 +41,7 @@ const LoginPopUp = ({ setShowLogin }) => {
         console.log(response.data.token);
         localStorage.setItem("token", response.data.token);
         dispatch(loginSuccess(response.data));
+        setShowLogin(false);
         console.log(response.data);
       } catch (error) {
         console.log(error.message);
