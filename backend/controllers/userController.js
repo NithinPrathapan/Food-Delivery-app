@@ -15,7 +15,7 @@ export const registerUser = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: email });
     if (existingUser) {
-      res
+      return res
         .status(500)
         .json({ success: false, message: "user already registered" });
     }
@@ -24,7 +24,10 @@ export const registerUser = async (req, res) => {
       return res.json({ success: false, message: "Please enter valid email" });
     }
     if (password.length < 8) {
-      res.json({ success: false, message: "Please enter strong password" });
+      return res.json({
+        success: false,
+        message: "Please enter strong password",
+      });
     }
 
     // encrypt password
@@ -38,9 +41,12 @@ export const registerUser = async (req, res) => {
     });
     await newUser.save();
     const token = createToken(newUser._id);
-    res
-      .status(200)
-      .json({ success: true, message: "User saved", token: token });
+    return res.status(200).json({
+      success: true,
+      message: "User saved",
+      token: token,
+      user: newUser,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Failed to save user" });
@@ -49,22 +55,28 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log("fn called");
+  console.log(email, password);
+
   try {
     const user = await userModel.findOne({ email: email });
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "user not found" });
+        .json({ success: false, message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.status(404).json({ success: false, message: "password mismatch" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Password mismatch" });
     }
+
     const token = createToken(user._id);
-    res.json({ success: true, token: token });
+    return res.status(200).json({ success: true, token: token, user: user });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ success: false, message: "failed to login" });
+    console.log(error.message);
+    return res.status(500).json({ success: false, message: "Failed to login" });
   }
 };

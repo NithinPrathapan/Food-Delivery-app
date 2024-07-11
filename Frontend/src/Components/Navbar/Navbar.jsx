@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ setShowLogin }) => {
+  const token = useSelector((state) => state.cart.token);
   const [menu, setMenu] = useState("");
   return (
     <div className="py-[20px] px-0 flex justify-between items-center">
@@ -16,7 +18,6 @@ const Navbar = ({ setShowLogin }) => {
         <Link
           to="/"
           onMouseEnter={() => setMenu("home")}
-          
           className={
             menu === "home"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -28,7 +29,6 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#explore-menu"
           onMouseEnter={() => setMenu("menu")}
-          
           className={
             menu === "menu"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -40,7 +40,6 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#app-download"
           onMouseEnter={() => setMenu("mobile")}
-          
           className={
             menu === "mobile"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"
@@ -52,7 +51,6 @@ const Navbar = ({ setShowLogin }) => {
         <a
           href="#footer"
           onMouseEnter={() => setMenu("contact")}
-          
           className={
             menu === "contact"
               ? "pb-[2px] border-b-2 cursor-pointer  border-[#49557e]"

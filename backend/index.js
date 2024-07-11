@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import foodRouter from "./routes/foodRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import bodyParser from "body-parser";
 
 //app config
 const app = express();
@@ -11,6 +12,7 @@ dotenv.config();
 const port = process.env.PORT || 4000;
 
 // middleware
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 

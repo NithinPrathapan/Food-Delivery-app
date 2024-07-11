@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { food_list } from ".././assets/assets.js";
 
-
 export const cartSlice = createSlice({
   name: "cart",
   initialState: [],
@@ -33,7 +32,6 @@ export const cartSlice = createSlice({
     },
   },
 });
-
 
 export const { addToCart, incrementQuantity, decrementQuantity, removeItem } =
   cartSlice.actions;
