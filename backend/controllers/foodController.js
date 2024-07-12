@@ -17,19 +17,19 @@ export const addFood = async (req, res) => {
   });
   try {
     await food.save();
-    res.status(200).json({ success: true, message: "Food Added" });
+    return res.status(200).json({ success: true, message: "Food Added" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const getAllFoods = async (req, res) => {
   try {
     const foods = await foodModel.find({});
-    res.status(200).json({ success: true, data: foods });
+    return res.status(200).json({ success: true, data: foods });
   } catch (error) {
-    res.json({ success: false, message: "Error" });
+    return res.json({ success: false, message: "Error" });
   }
 };
 
@@ -39,8 +39,8 @@ export const removeFood = async (req, res) => {
   try {
     const food = await foodModel.findByIdAndDelete(req.params.id);
     fs.unlink(`uploads/${food.image}`, () => {});
-    res.status(200).json({ success: true, data: food });
+    return res.status(200).json({ success: true, data: food });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

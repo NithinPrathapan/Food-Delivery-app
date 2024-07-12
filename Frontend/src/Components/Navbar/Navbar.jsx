@@ -17,7 +17,7 @@ const Navbar = ({ setShowLogin }) => {
     navigate("/");
   };
   return (
-    <div className="py-[20px] px-0 flex justify-between items-center ">
+    <div className=" px-0 flex justify-between items-center h-[60px] ">
       <Link to="/">
         {" "}
         <h1 className="text-red-500 font-bold tracking-widest sm:text-3xl text-2xl">

@@ -8,6 +8,7 @@ import {
 } from "../../Redux/cartSlice";
 
 const FoodItem = ({ item }) => {
+  console.log(item);
   const dispatch = useDispatch();
   const [itemCount, setItemCount] = useState(0);
   const { name, description, _id, price, category, image } = item;
@@ -28,12 +29,16 @@ const FoodItem = ({ item }) => {
   };
 
   return (
-    <div className="w-full m-auto rounded-[15px] shadow-md transition-all duration-200 animate-fadeIn ">
+    <div className="w-full h-full  m-auto rounded-[15px] shadow-md transition-all duration-300 cursor-pointer  hover:scale-105 ease-in-out ">
       <div className="relative">
-        <img className="w-full rounded-[15px]" src={image} alt="foodimg" />
+        <img
+          className=" w-[300px] mx-auto h-[200px] object-cover rounded-[15px] shadow-md drop-shadow-lg"
+          src={`http://localhost:5000/api/food/images/${image}`}
+          alt="foodimg"
+        />
         {!itemCount ? (
           <img
-            className="cursor-pointer w-[35px] absolute bottom-4 right-1.5 rounded-full "
+            className=" cursor-pointer w-[35px] absolute bottom-4 right-1.5 rounded-full "
             onClick={handleAddToCart}
             src={assets.add_icon_white}
             alt="ico"
@@ -41,7 +46,7 @@ const FoodItem = ({ item }) => {
         ) : (
           <div className="absolute bottom-4 right-1.5 flex items-center gap-2 p-[6px] bg-[#ffffff] rounded-2xl   ">
             <img
-              className="cursor-pointer w-[30px]"
+              className="cursor-pointer w-[30px] "
               onClick={handleDecrement}
               src={assets.remove_icon_red}
               alt="ico"
@@ -56,20 +61,22 @@ const FoodItem = ({ item }) => {
           </div>
         )}
       </div>
-      <div className="p-4 flex flex-col gap-1">
-        <div className="flex justify-between mb-1">
-          <p className="font-semibold text-lg ">{name}</p>
+      <div className="p-2 flex flex-col h-[100px]">
+        <div className="flex justify-between ">
+          <p className="font-semibold text-md ">{name}</p>
           <img
-            className="object-contain w-[70px]"
+            className="object-contain w-[60px]"
             src={assets.rating_starts}
             alt="star"
           />
         </div>
-        <p className="text-[12px] ">{description}</p>
-        <p className="text-[22px] text-orange-500 font-bold my-[10px]">
-          {" "}
-          ${price}
-        </p>
+        <div className="flex justify-between items-center">
+          <p className="text-[12px] ">{description}</p>
+          <p className="text-[22px] ml-4 text-orange-500 font-bold my-[10px]">
+            {" "}
+            ${price}
+          </p>
+        </div>
       </div>
     </div>
   );
