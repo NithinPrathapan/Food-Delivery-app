@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import foodRouter from "./routes/foodRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import cartRouter from "./routes/cartRoutes.js";
 import bodyParser from "body-parser";
 
 //app config
@@ -34,6 +35,7 @@ app.use("/api/food/images", express.static("uploads"));
 
 app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
+app.use("/api/cart", cartRouter);
 
 app.listen(port, () => {
   console.log("connected to port", port);

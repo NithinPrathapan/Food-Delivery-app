@@ -6,6 +6,7 @@ import validator from "validator";
 const createToken = (id) => {
   // token created
   return jwt.sign({ id }, process.env.JWT_SECRET);
+  // decode we get this id in auth middleware
 };
 
 export const registerUser = async (req, res) => {
