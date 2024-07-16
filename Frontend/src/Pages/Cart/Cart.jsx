@@ -6,14 +6,18 @@ import {
   incrementQuantity,
 } from "../../Redux/cartSlice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Cart = () => {
+  const token = useSelector((state) => state.auth.userToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartitems = useSelector((state) => state.cart);
+  const cartitems = useSelector((state) => state.cart.items);
+  console.log(cartitems);
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
+    getCartItems();
     getTotalCartAmount();
   }, [cartitems]);
   const getTotalCartAmount = () => {
@@ -22,6 +26,12 @@ const Cart = () => {
       amount += item.quantity * item.price;
     });
     setTotalAmount(amount);
+  };
+  const getCartItems = async () => {
+    const response = await axios.get("http://localhost:5000/api/cart", {
+      headers: { token },
+    });
+    console.log(response.data.message);
   };
 
   const handleRemoveItem = (id) => {
@@ -141,7 +151,9 @@ const Cart = () => {
           <h1 className="text-orange-500 text-2xl text-center flex justify-center my-[40px] font-bold tracking-widest">
             Your Cart is empty
           </h1>
-          <button className="bg-orange-500 text-white  px-6 py-2 rounded-md font-bold tracking-wider text-xl">See Items</button>
+          <button className="bg-orange-500 text-white  px-6 py-2 rounded-md font-bold tracking-wider text-xl">
+            See Items
+          </button>
         </div>
       )}
     </div>

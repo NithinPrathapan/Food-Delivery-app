@@ -1,65 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
-import { useDispatch } from "react-redux";
-import {
-  addToCart,
-  decrementQuantity,
-  incrementQuantity,
-} from "../../Redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../Redux/cartSlice";
+import axios from "axios";
 
-const FoodItem = ({ item }) => {
-  console.log(item);
+const FoodItem = ({ item, cartQuantity }) => {
+  const [isAdded, setisAdded] = useState(false);
   const dispatch = useDispatch();
-  const [itemCount, setItemCount] = useState(0);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (cartQuantity) {
+      setisAdded(true);
+    }
+  }, []);
   const { name, description, _id, price, category, image } = item;
 
-  const handleAddToCart = () => {
-    setItemCount((prev) => prev + 1);
-    dispatch(addToCart(item));
-  };
-
-  const handleIncrement = () => {
-    setItemCount((prev) => prev + 1);
-    dispatch(incrementQuantity(_id));
-  };
-
-  const handleDecrement = () => {
-    setItemCount((prev) => prev - 1);
-    dispatch(decrementQuantity(_id));
+  const handleAddToCart = async () => {
+    dispatch(addToCart({ id: _id, quantity: 1 }));
+    if (token) {
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/api/cart/add`,
+          { itemId: _id, quantity: 1 },
+          {
+            headers: { token },
+          }
+        );
+        setisAdded(true);
+      } catch (error) {
+        setisAdded(false);
+        console.log(error);
+      }
+    }
   };
 
   return (
-    <div className="w-full h-full  m-auto rounded-[15px] shadow-md transition-all duration-300 cursor-pointer  hover:scale-105 ease-in-out ">
+    <div className="w-full h-full  m-auto rounded-[15px] shadow-md cursor-pointer ">
       <div className="relative">
         <img
-          className=" w-[300px] mx-auto h-[200px] object-cover rounded-[15px] shadow-md drop-shadow-lg"
+          className=" w-[300px] mx-auto h-[200px] object-cover rounded-[15px] shadow-md drop-shadow-lg transition-all duration-300  hover:scale-[1.04] hover:-translate-y-3 ease-in-out "
           src={`http://localhost:5000/api/food/images/${image}`}
           alt="foodimg"
         />
-        {!itemCount ? (
-          <img
-            className=" cursor-pointer w-[35px] absolute bottom-4 right-1.5 rounded-full "
-            onClick={handleAddToCart}
-            src={assets.add_icon_white}
-            alt="ico"
-          />
-        ) : (
-          <div className="absolute bottom-4 right-1.5 flex items-center gap-2 p-[6px] bg-[#ffffff] rounded-2xl   ">
-            <img
-              className="cursor-pointer w-[30px] "
-              onClick={handleDecrement}
-              src={assets.remove_icon_red}
-              alt="ico"
-            />
-            <p>{itemCount}</p>
-            <img
-              className="cursor-pointer w-[30px]"
-              onClick={handleIncrement}
-              src={assets.add_icon_green}
-              alt="ico"
-            />
-          </div>
-        )}
+        <button
+          disabled={isAdded}
+          onClick={handleAddToCart}
+          className={` ${
+            isAdded
+              ? "absolute bg-orange-500 rounded-md w-[130px] px-2 py-2 bottom-4 right-6 text-sm text-black font-semibold opacity-70 hover:opacity-100 duration-300 transition-all"
+              : "absolute bg-orange-500 rounded-md w-[130px] px-2 py-2 bottom-4 right-6 text-sm text-white font-semibold opacity-70 hover:opacity-100 duration-300 transition-all"
+          }`}
+        >
+          {isAdded ? "View in cart" : "Add to Cart"}
+        </button>
       </div>
       <div className="p-2 flex flex-col h-[100px]">
         <div className="flex justify-between ">

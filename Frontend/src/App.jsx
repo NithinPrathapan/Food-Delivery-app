@@ -21,7 +21,6 @@ const App = () => {
       const response = await axios.get("http://localhost:5000/api/food");
       const data = response.data.data;
 
-      console.log(data, "food data");
       dispatch(listAllItems(data));
     } catch (error) {
       console.log(error);
