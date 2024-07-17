@@ -44,3 +44,17 @@ export const removeFood = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+//getfood by id
+
+export const getFood = async (req, res) => {
+  try {
+    const food = await foodModel.findById(req.params.id);
+    return res.status(200).json({ success: true, data: food });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Error getting food" });
+  }
+};

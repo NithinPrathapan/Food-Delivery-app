@@ -12,27 +12,50 @@ const Cart = () => {
   const token = useSelector((state) => state.auth.userToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartitems = useSelector((state) => state.cart.items);
-  console.log(cartitems);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [cartData, setCartData] = useState([]);
+  const [products, setProducts] = useState([]);
+  const totalAmount = 0;
+  console.log(products);
 
   useEffect(() => {
-    getCartItems();
-    getTotalCartAmount();
-  }, [cartitems]);
-  const getTotalCartAmount = () => {
-    let amount = 0;
-    cartitems.forEach((item) => {
-      amount += item.quantity * item.price;
-    });
-    setTotalAmount(amount);
-  };
-  const getCartItems = async () => {
-    const response = await axios.get("http://localhost:5000/api/cart", {
-      headers: { token },
-    });
-    console.log(response.data.message);
-  };
+    const fetchProducts = async () => {
+      try {
+        const productIds = Object.keys(cartData);
+        const productPromises = productIds.map((id) =>
+          axios
+            .get(`http://localhost:5000/api/food/${id}`)
+            .then((response) => response.data.data)
+        );
+        const fetchedProducts = await Promise.all(productPromises);
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+      }
+    };
+
+    if (Object.keys(cartData).length > 0) {
+      fetchProducts();
+    }
+  }, [cartData]);
+
+  useEffect(() => {
+    const getCartData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/cart", {
+          headers: { token },
+        });
+        const { cartData } = response.data;
+        setCartData(cartData);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    getCartData();
+  }, [token]);
+
+  // fetch product details for each id
 
   const handleRemoveItem = (id) => {
     dispatch(removeItem(id));
@@ -57,14 +80,18 @@ const Cart = () => {
         </div>
         <br />
         <hr />
-        {cartitems.map((item) => {
+        {products.map((item) => {
           return (
             <div key={item._id}>
               <div
                 className=" sm:grid  sm:grid-cols-6 items-center justify-center text-center text-gray-500 my-[10px] mx-0 "
                 key={item._id}
               >
-                <img className="w-[50px] mx-auto" src={item.image} alt="" />
+                <img
+                  className="w-[50px] mx-auto"
+                  src={`http://localhost:5000/api/food/images/${item.image}`}
+                  alt=""
+                />
                 <p>{item.name}</p>
                 <p>$ {item.price}</p>
                 <div className="flex gap-2 items-center justify-center  ">
@@ -76,7 +103,7 @@ const Cart = () => {
                   >
                     -
                   </button>
-                  <p>{item.quantity}</p>
+                  <p>{cartData[item._id]}</p>
                   <button
                     onClick={() => {
                       handleIncrement(item._id);
@@ -86,7 +113,8 @@ const Cart = () => {
                     +
                   </button>
                 </div>
-                <p>$ {item.price * item.quantity}</p>
+
+                <p>$ {item.price * cartData[item._id]}</p>
                 <p
                   onClick={() => handleRemoveItem(item._id)}
                   className=" cursor-pointer font-semibold text-red-500 text-xl"
@@ -99,7 +127,7 @@ const Cart = () => {
           );
         })}
       </div>
-      {cartitems.length > 0 ? (
+      {products.length > 0 ? (
         <div className="mt-[80px] sm:flex flex flex-col-reverse sm:flex-col justify-between gap-20 ">
           <div className="flex-1 flex flex-col gap-[20px]">
             <h2 className="text-2xl  font-semibold">Cart Totals</h2>

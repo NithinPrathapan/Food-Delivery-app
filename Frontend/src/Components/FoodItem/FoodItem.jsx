@@ -3,14 +3,16 @@ import { assets } from "../../assets/assets";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Redux/cartSlice";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const FoodItem = ({ item, cartQuantity }) => {
+  const navigate = useNavigate();
   const [isAdded, setisAdded] = useState(false);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (cartQuantity) {
+    if (cartQuantity > 0) {
       setisAdded(true);
     }
   }, []);
@@ -44,8 +46,18 @@ const FoodItem = ({ item, cartQuantity }) => {
           alt="foodimg"
         />
         <button
-          disabled={isAdded}
-          onClick={handleAddToCart}
+          title={
+            isAdded
+              ? "Go to your cart to view added items"
+              : "Click to add this item to your cart"
+          }
+          onClick={() => {
+            if (isAdded) {
+              navigate("/cart");
+            } else {
+              handleAddToCart();
+            }
+          }}
           className={` ${
             isAdded
               ? "absolute bg-orange-500 rounded-md w-[130px] px-2 py-2 bottom-4 right-6 text-sm text-black font-semibold opacity-70 hover:opacity-100 duration-300 transition-all"

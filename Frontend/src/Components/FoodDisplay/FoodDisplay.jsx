@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const FoodDisplay = ({ category }) => {
   const food_list = useSelector((state) => state.item);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  console.log("cart items", cartItems);
   const getCartQuantity = (id) => {
     const cartItem = cartItems.find((item) => item.id === id);
     return cartItem ? cartItem.cartQuantity : 0;
