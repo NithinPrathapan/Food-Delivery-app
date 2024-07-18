@@ -10,34 +10,35 @@ import axios from "axios";
 
 const Cart = () => {
   const token = useSelector((state) => state.auth.userToken);
-  const cartDetails = useSelector((state) => state.cart.cartItems);
-  console.log(cartDetails);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cartData, setCartData] = useState([]);
   const [products, setProducts] = useState([]);
-  const totalAmount = 0;
+  const [totalAmount, setTotalAmount] = useState(0);
   console.log(products);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productIds = Object.keys(cartData);
-        const productPromises = productIds.map((id) =>
-          axios
-            .get(`http://localhost:5000/api/food/${id}`)
-            .then((response) => response.data.data)
-        );
-        const fetchedProducts = await Promise.all(productPromises);
-        setProducts(fetchedProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-      }
-    };
+    if (cartData) {
+      const fetchProducts = async () => {
+        try {
+          const productIds = Object.keys(cartData);
+          const productPromises = productIds.map((id) =>
+            axios
+              .get(`http://localhost:5000/api/food/${id}`)
+              .then((response) => response.data.data)
+          );
+          const fetchedProducts = await Promise.all(productPromises);
+          setProducts(fetchedProducts);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        } finally {
+        }
+      };
 
-    if (Object.keys(cartData).length > 0) {
-      fetchProducts();
+      if (Object.keys(cartData).length > 0) {
+        fetchProducts();
+      }
+      calclateTotalAmount();
     }
   }, [cartData]);
 
@@ -71,6 +72,7 @@ const Cart = () => {
         }
       );
       getCartData();
+      window.location.reload();
     }
   };
   const handleDecrement = async (id) => {
@@ -103,6 +105,13 @@ const Cart = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const calclateTotalAmount = () => {
+    const total = products.reduce((acc, product) => {
+      return acc + product.price * cartData[product._id];
+    }, 0);
+    setTotalAmount(total);
   };
 
   return (
@@ -172,7 +181,7 @@ const Cart = () => {
             <div className="">
               <div className="flex justify-between text-[#555] my-3">
                 <p>Sub Total</p>
-                <p>$ {totalAmount}</p>
+                <p>${totalAmount ? totalAmount : 0}</p>
               </div>
               <hr className="my-[10px] mx-0" />
               <div className="flex justify-between text-[#555] my-3">
