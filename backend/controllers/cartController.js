@@ -21,14 +21,22 @@ export const addToCart = async (req, res) => {
   }
 };
 export const removeFromCart = async (req, res) => {
+  console.log("fn called");
+  const { quantity, userId } = req.body;
+  console.log(req.params.id);
+  console.log(quantity);
   try {
     let userData = await userModel.findOne({ _id: req.body.userId });
 
     let cartData = await userData.cartData;
-    if (cartData[req.body.itemId] > 0) {
-      cartData[req.body.itemId] -= 1;
+    console.log("cartdata", cartData[req.params.id]);
+    if (cartData[req.params.id] > 0) {
+      cartData[req.params.id] -= quantity;
     }
-    await userModel.findByIdAndUpdate(req.body.userId, { cartData: cartData });
+    if (cartData[req.params.id] <= 0) {
+      delete cartData[req.params.id];
+    }
+    await userModel.findByIdAndUpdate(userId, { cartData });
     return res
       .status(200)
       .json({ success: true, message: "removed successfully" });

@@ -10,6 +10,8 @@ import axios from "axios";
 
 const Cart = () => {
   const token = useSelector((state) => state.auth.userToken);
+  const cartDetails = useSelector((state) => state.cart.cartItems);
+  console.log(cartDetails);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cartData, setCartData] = useState([]);
@@ -39,32 +41,68 @@ const Cart = () => {
     }
   }, [cartData]);
 
+  const getCartData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/cart", {
+        headers: { token },
+      });
+      const { cartData } = response.data;
+      setCartData(cartData);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
   useEffect(() => {
-    const getCartData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/cart", {
-          headers: { token },
-        });
-        const { cartData } = response.data;
-        setCartData(cartData);
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
-
     getCartData();
   }, [token]);
 
   // fetch product details for each id
 
-  const handleRemoveItem = (id) => {
+  const handleRemoveItem = async (id) => {
     dispatch(removeItem(id));
+    const quantity = cartData[id];
+    console.log(quantity);
+    if (token) {
+      const response = await axios.post(
+        `http://localhost:5000/api/cart/remove/${id}`,
+        { quantity },
+        {
+          headers: { token },
+        }
+      );
+      getCartData();
+    }
   };
-  const handleDecrement = (id) => {
+  const handleDecrement = async (id) => {
+    const itemId = id;
     dispatch(decrementQuantity(id));
+    if (token) {
+      const response = await axios.post(
+        `http://localhost:5000/api/cart/remove/${itemId}`,
+        { quantity: 1 },
+        {
+          headers: { token },
+        }
+      );
+      getCartData();
+    }
   };
-  const handleIncrement = (id) => {
+  const handleIncrement = async (id) => {
     dispatch(incrementQuantity(id));
+    try {
+      if (token) {
+        const response = await axios.post(
+          `http://localhost:5000/api/cart/add`,
+          { itemId: id, quantity: 1 },
+          {
+            headers: { token },
+          }
+        );
+        getCartData();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

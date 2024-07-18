@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../Redux/cartSlice";
+import { addToCart, decrementQuantity } from "../../Redux/cartSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -36,6 +36,8 @@ const FoodItem = ({ item, cartQuantity }) => {
       }
     }
   };
+
+
 
   return (
     <div className="w-full h-full  m-auto rounded-[15px] shadow-md cursor-pointer ">
