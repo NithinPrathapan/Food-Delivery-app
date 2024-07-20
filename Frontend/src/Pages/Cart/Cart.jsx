@@ -4,6 +4,7 @@ import {
   removeItem,
   decrementQuantity,
   incrementQuantity,
+  getTotalAmount,
 } from "../../Redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,32 +16,39 @@ const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  console.log(products);
+  console.log(totalAmount);
+
+  useEffect(() => {
+    getCartData();
+  }, [0]);
 
   useEffect(() => {
     if (cartData) {
-      const fetchProducts = async () => {
-        try {
-          const productIds = Object.keys(cartData);
-          const productPromises = productIds.map((id) =>
-            axios
-              .get(`http://localhost:5000/api/food/${id}`)
-              .then((response) => response.data.data)
-          );
-          const fetchedProducts = await Promise.all(productPromises);
-          setProducts(fetchedProducts);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        } finally {
-        }
-      };
-
-      if (Object.keys(cartData).length > 0) {
-        fetchProducts();
-      }
-      calclateTotalAmount();
+      fetchProducts();
     }
   }, [cartData]);
+
+  useEffect(() => {
+    calclateTotalAmount();
+  }, [products]);
+
+  const fetchProducts = async () => {
+    console.log("fetch products");
+    try {
+      const productIds = Object.keys(cartData);
+      const productPromises = productIds.map((id) =>
+        axios
+          .get(`http://localhost:5000/api/food/${id}`)
+          .then((response) => response.data.data)
+      );
+      const fetchedProducts = await Promise.all(productPromises);
+      setProducts(fetchedProducts);
+      console.log(products, "products stores second");
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+    }
+  };
 
   const getCartData = async () => {
     try {
@@ -49,13 +57,11 @@ const Cart = () => {
       });
       const { cartData } = response.data;
       setCartData(cartData);
+      console.log("cartdta loads first time", cartData);
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
   };
-  useEffect(() => {
-    getCartData();
-  }, [token]);
 
   // fetch product details for each id
 
@@ -72,7 +78,6 @@ const Cart = () => {
         }
       );
       getCartData();
-      window.location.reload();
     }
   };
   const handleDecrement = async (id) => {
@@ -112,6 +117,8 @@ const Cart = () => {
       return acc + product.price * cartData[product._id];
     }, 0);
     setTotalAmount(total);
+    dispatch(getTotalAmount(total));
+    console.log(total);
   };
 
   return (
