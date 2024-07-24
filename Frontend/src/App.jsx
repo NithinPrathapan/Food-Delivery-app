@@ -9,6 +9,7 @@ import LoginPopUp from "./Components/loginPopup/LoginPopUp";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { listAllItems } from "./Redux/itemSlice";
+import Verify from "./Pages/verify/Verify";
 const App = () => {
   const dispatch = useDispatch();
   const [showLogin, setShowLogin] = useState(false);
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/" element={<Home />}></Route>
           <Route path="/cart" element={<Cart />}></Route>
           <Route path="/order" element={<PlaceOrder />}></Route>
+          <Route path="/verify" element={<Verify />}></Route>
         </Routes>
       </div>
       <Footer />

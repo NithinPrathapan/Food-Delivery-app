@@ -16,7 +16,6 @@ const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  console.log(totalAmount);
 
   useEffect(() => {
     getCartData();
@@ -33,7 +32,6 @@ const Cart = () => {
   }, [products]);
 
   const fetchProducts = async () => {
-    console.log("fetch products");
     try {
       const productIds = Object.keys(cartData);
       const productPromises = productIds.map((id) =>
@@ -43,7 +41,6 @@ const Cart = () => {
       );
       const fetchedProducts = await Promise.all(productPromises);
       setProducts(fetchedProducts);
-      console.log(products, "products stores second");
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -53,11 +50,12 @@ const Cart = () => {
   const getCartData = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/cart", {
-        headers: { token },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const { cartData } = response.data;
       setCartData(cartData);
-      console.log("cartdta loads first time", cartData);
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }
@@ -68,7 +66,6 @@ const Cart = () => {
   const handleRemoveItem = async (id) => {
     dispatch(removeItem(id));
     const quantity = cartData[id];
-    console.log(quantity);
     if (token) {
       const response = await axios.post(
         `http://localhost:5000/api/cart/remove/${id}`,
@@ -88,7 +85,9 @@ const Cart = () => {
         `http://localhost:5000/api/cart/remove/${itemId}`,
         { quantity: 1 },
         {
-          headers: { token },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       getCartData();
@@ -102,7 +101,9 @@ const Cart = () => {
           `http://localhost:5000/api/cart/add`,
           { itemId: id, quantity: 1 },
           {
-            headers: { token },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         getCartData();
@@ -118,7 +119,6 @@ const Cart = () => {
     }, 0);
     setTotalAmount(total);
     dispatch(getTotalAmount(total));
-    console.log(total);
   };
 
   return (

@@ -15,12 +15,15 @@ const port = process.env.PORT || 4000;
 
 // middleware
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Authorization, Content-Type",
+    credentials: true,
+  })
+);
 app.use(express.json());
-app.use(cors());
-
-app.get("/", (req, res) => {
-  res.send("hello world!");
-});
 
 mongoose
   .connect(process.env.MONGO_URL)

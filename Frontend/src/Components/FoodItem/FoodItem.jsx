@@ -26,7 +26,9 @@ const FoodItem = ({ item, cartQuantity }) => {
           `http://localhost:5000/api/cart/add`,
           { itemId: _id, quantity: 1 },
           {
-            headers: { token },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         setisAdded(true);
@@ -36,8 +38,6 @@ const FoodItem = ({ item, cartQuantity }) => {
       }
     }
   };
-
-
 
   return (
     <div className="w-full h-full  m-auto rounded-[15px] shadow-md cursor-pointer ">

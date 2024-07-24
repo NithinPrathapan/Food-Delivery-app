@@ -6,7 +6,6 @@ const PlaceOrder = () => {
   const token = useSelector((state) => state.auth.userToken);
   const { cartItems, totalAmount } = useSelector((state) => state.cart);
   const food_list = useSelector((state) => state.item);
-  console.log(totalAmount);
 
   console.log(cartItems);
   const [data, setData] = useState({
@@ -41,13 +40,19 @@ const PlaceOrder = () => {
         `http://localhost:5000/api/order/place`,
         { orderData },
         {
-          headers: { token: token },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      console.log(response.data, "response");
-      if (response.data.status === 200) {
-        const { session_url } = response.data;
-        window.location.replace(session_url);
+      if (response) {
+        const url = response.data.session_url;
+        console.log(url, "session url");
+        if (url) {
+          window.location.href = url;
+        } else {
+          console.log("session url not found");
+        }
       }
     } catch (error) {
       console.log(error.message);
@@ -162,7 +167,7 @@ const PlaceOrder = () => {
           <div className="">
             <div className="flex justify-between text-[#555] my-3">
               <p>Sub Total</p>
-              <p>$ {0}</p>
+              <p>$ {totalAmount}</p>
             </div>
             <hr className="my-[10px] mx-0" />
             <div className="flex justify-between text-[#555] my-3">
@@ -172,7 +177,7 @@ const PlaceOrder = () => {
             <hr className="my-[10px] mx-0" />
             <div className="flex justify-between text-[#555] my-3">
               <b>Total</b>
-              <b>$ {0 + 2}</b>
+              <b>$ {totalAmount + 2}</b>
             </div>
             <button
               type="submit"
