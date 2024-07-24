@@ -14,7 +14,7 @@ export const placeOrder = async (req, res) => {
   try {
     const newOrder = new orderModel({
       userId: req.body.userId,
-      items,
+      item,
       amount,
       address,
     });
@@ -68,6 +68,18 @@ export const verifyOrder = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, error: error });
+    return res.status(500).json({ success: false, error: error });
+  }
+};
+
+// users order for frontend
+
+export const usersOrder = async (req, res) => {
+  try {
+    const orders = await orderModel.find({ userId: req.body.userId });
+    return response.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: error });
   }
 };
