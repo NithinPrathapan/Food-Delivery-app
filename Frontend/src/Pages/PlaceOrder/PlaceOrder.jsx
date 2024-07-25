@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
   const token = useSelector((state) => state.auth.userToken);
   const { cartItems, totalAmount } = useSelector((state) => state.cart);
   const food_list = useSelector((state) => state.item);
+  const navigate = useNavigate();
 
   console.log(cartItems);
   const [data, setData] = useState({
@@ -65,6 +67,13 @@ const PlaceOrder = () => {
     setData({ ...data, [name]: value });
   };
 
+  useEffect(() => {
+    if (!token) {
+      navigate("/cart");
+    } else if (!totalAmount) {
+      navigate("/cart");
+    }
+  }, [token]);
   return (
     <form
       onSubmit={placeOrder}

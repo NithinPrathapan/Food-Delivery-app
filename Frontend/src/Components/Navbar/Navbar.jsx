@@ -101,7 +101,10 @@ const Navbar = ({ setShowLogin }) => {
             />
 
             <ul className="absolute transition-all hidden duration-300 animate-fadeIn group-hover:flex flex-col bg-white     border-2 -right-6 w-[120px] p-2 justify-center items-center    shadow-md rounded-md z-20 ">
-              <li className="cursor-pointer py-2 px-1 font-semibold hover:bg-slate-200 w-full flex justify-between items-center ">
+              <li
+                onClick={() => navigate("/myorders")}
+                className="cursor-pointer py-2 px-1 font-semibold hover:bg-slate-200 w-full flex justify-between items-center "
+              >
                 <img className="w-[30px] " src={assets.bag_icon} alt="" />
                 <p className=" text-center text-emerald-800 text-sm">Orders</p>
               </li>

@@ -14,7 +14,7 @@ export const placeOrder = async (req, res) => {
   try {
     const newOrder = new orderModel({
       userId: req.body.userId,
-      item,
+      item: items,
       amount,
       address,
     });
@@ -75,11 +75,12 @@ export const verifyOrder = async (req, res) => {
 // users order for frontend
 
 export const usersOrder = async (req, res) => {
+  console.log("fn call userorder");
   try {
     const orders = await orderModel.find({ userId: req.body.userId });
-    return response.status(200).json({ success: true, data: orders });
+    return res.status(200).json({ success: true, data: orders });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return res.status(500).json({ success: false, error: error });
   }
 };
