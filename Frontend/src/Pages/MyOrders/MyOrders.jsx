@@ -20,7 +20,6 @@ const MyOrders = () => {
       );
 
       setData(response.data.data);
-      console.log(data);
     } catch (error) {
       console.log(error.message);
     }
@@ -53,7 +52,10 @@ const MyOrders = () => {
               <p>
                 <b>▢</b> <b>{order.status}</b>
               </p>
-              <button className="bg-red-500 bg-opacity-25 text-black text-opacity-60 px-4 py-2 border-none  rounded-md font-semibold">
+              <button
+                onClick={fetchOrders}
+                className="bg-red-500 bg-opacity-25 text-black text-opacity-60 px-4 py-2 border-none  rounded-md font-semibold"
+              >
                 Track Order
               </button>
             </div>

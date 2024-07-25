@@ -84,3 +84,28 @@ export const usersOrder = async (req, res) => {
     return res.status(500).json({ success: false, error: error });
   }
 };
+
+// list orders for users
+
+export const listOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find({});
+    return res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: error });
+  }
+};
+
+// updating the status
+export const updateStatus = async (req, res) => {
+  try {
+    await orderModel.findByIdAndUpdate(req.body.orderId, {
+      status: req.body.status,
+    });
+    return res.status(200).json({ success: true, message: "status updated" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error: error });
+  }
+};
