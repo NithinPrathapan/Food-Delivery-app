@@ -12,9 +12,9 @@ const FoodItem = ({ item, cartQuantity }) => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (cartQuantity > 0) {
-      setisAdded(true);
-    }
+    // if (cartQuantity > 0) {
+    //   setisAdded(true);
+    // }
   }, []);
   const { name, description, _id, price, category, image } = item;
 
@@ -31,7 +31,8 @@ const FoodItem = ({ item, cartQuantity }) => {
             },
           }
         );
-        setisAdded(true);
+        setisAdded(false);
+        console.log(response.data);
       } catch (error) {
         setisAdded(false);
         console.log(error);

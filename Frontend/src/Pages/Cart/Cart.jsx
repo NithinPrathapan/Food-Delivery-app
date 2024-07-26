@@ -10,10 +10,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Cart = () => {
+  const storeCart = useSelector((state) => state.cart.cartItems);
+  console.log("store cart", storeCart);
   const token = useSelector((state) => state.auth.userToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cartData, setCartData] = useState([]);
+  console.log(cartData);
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
@@ -23,17 +26,17 @@ const Cart = () => {
 
   useEffect(() => {
     if (cartData) {
-      fetchProducts();
+      //  fetchProducts();
     }
   }, [cartData]);
 
   useEffect(() => {
-    calclateTotalAmount();
+    // calclateTotalAmount();
   }, [products]);
 
   const fetchProducts = async () => {
     try {
-      const productIds = Object.keys(cartData);
+      const productIds = Object.keys(cartData.id);
       const productPromises = productIds.map((id) =>
         axios
           .get(`http://localhost:5000/api/food/${id}`)
@@ -48,16 +51,21 @@ const Cart = () => {
   };
 
   const getCartData = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/cart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const { cartData } = response.data;
-      setCartData(cartData);
-    } catch (error) {
-      console.error("Error fetching cart data:", error);
+    if (token) {
+      try {
+        const response = await axios.get("http://localhost:5000/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const cartData = response.data.data;
+        console.log(cartData);
+        setCartData(cartData);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    } else {
+      setCartData(storeCart);
     }
   };
 

@@ -1,25 +1,40 @@
 import userModel from "../models/userModel.js";
 
 export const addToCart = async (req, res) => {
-  const { quantity } = req.body;
   try {
-    let userData = await userModel.findOne({ _id: req.body.userId });
-    let cartData = await userData.cartData; //user data include cart array by default and extracted from it
-    if (!cartData[req.body.itemId]) {
-      //no item id found
-      cartData[req.body.itemId] = 1; //item id inc to 1
-    } else {
-      cartData[req.body.itemId] += quantity;
+    const userId = req.body.userId;
+    const itemId = req.body.itemId;
+    const quantity = req.body.quantity || 1;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
-    await userModel.findByIdAndUpdate(req.body.userId, { cartData });
-    return res
-      .status(200)
-      .json({ syuccess: true, data: cartData, message: "Added cart" });
+    if (!Array.isArray(user.cartData)) {
+      user.cartData = [];
+    }
+    const itemIndex = user.cartData.findIndex((item) => item.id === itemId);
+    if (itemIndex > -1) {
+      user.cartData[itemIndex].quantity += quantity;
+      console.log(
+        `Incremented quantity for item ${itemId}: ${user.cartData[itemIndex].quantity}`
+      );
+    } else {
+      user.cartData.push({
+        id: itemId,
+        quantity: quantity,
+      });
+      console.log(`Added item ${itemId} to cart with quantity ${quantity}`);
+    }
+    await user.save();
+    res.status(200).json({ success: true, data: user.cartData });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, error: error });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
+
 export const removeFromCart = async (req, res) => {
   console.log("fn called");
   const { quantity, userId } = req.body;
@@ -27,7 +42,6 @@ export const removeFromCart = async (req, res) => {
   console.log(quantity);
   try {
     let userData = await userModel.findOne({ _id: req.body.userId });
-
     let cartData = await userData.cartData;
     console.log("cartdata", cartData[req.params.id]);
     if (cartData[req.params.id] > 0) {

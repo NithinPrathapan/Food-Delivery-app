@@ -6,13 +6,14 @@ import Cart from "./Pages/Cart/Cart";
 import PlaceOrder from "./Pages/PlaceOrder/PlaceOrder";
 import Footer from "./Components/Footer/Footer";
 import LoginPopUp from "./Components/loginPopup/LoginPopUp";
+import Verify from "./Pages/verify/Verify";
+import MyOrders from "./Pages/MyOrders/MyOrders";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { listAllItems } from "./Redux/itemSlice";
-import Verify from "./Pages/verify/Verify";
-import MyOrders from "./Pages/MyOrders/MyOrders";
 const App = () => {
   const dispatch = useDispatch();
+
   const [showLogin, setShowLogin] = useState(false);
   useEffect(() => {
     getAllFoods();
