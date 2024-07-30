@@ -5,6 +5,7 @@ import { assets } from "../../../src/assets/assets.js";
 
 const MyOrders = () => {
   const [data, setData] = useState([]);
+  console.log(data)
   const token = useSelector((state) => state.auth.userToken);
 
   const fetchOrders = async () => {
@@ -37,7 +38,7 @@ const MyOrders = () => {
           return (
             <div
               key={index}
-              className="flex justify-between items-center lg:gap-4 gap-2 text-xs lg:text-sm flex-wrap"
+              className="grid items-center lg:gap-4 gap-2 text-xs lg:text-sm flex-wrap"
             >
               <img src={assets.parcel_icon} alt="" />
               <p>

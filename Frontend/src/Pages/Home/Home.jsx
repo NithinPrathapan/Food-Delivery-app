@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import ExploreMenu from "../../Components/ExploreMenu/ExploreMenu";
 import FoodDisplay from "../../Components/FoodDisplay/FoodDisplay";
 import AppDownload from "../../Components/AppDownload/AppDownload";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { listAllItems } from "../../Redux/itemSlice";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchAllFooodItems = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/food");
+        dispatch(listAllItems(response.data.data));
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+  }, []);
+
   const [category, setCategory] = useState("All");
-  const [cartData, setCartData] = useState([]);
-  const cartitems = useSelector((state) => state.cart.cartItems);
-  console.log(cartitems);
   return (
     <div>
       <Header />

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   cartItems: JSON.parse(localStorage.getItem("cart")) || [],
@@ -10,16 +10,18 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    listAllCarts: (state, action) => {
+      state.cartItems = action.payload;
+    },
     addToCart: (state, action) => {
-      const { id, quantity } = action.payload;
+      const { id } = action.payload;
       const itemExist = state.cartItems.find((item) => item.id === id);
       if (itemExist) {
-        itemExist.cartQuantity += quantity;
+        itemExist.cartQuantity += 1;
       } else {
-        state.cartItems.push({ id, cartQuantity: quantity });
+        state.cartItems.push({ id, cartQuantity: 1 });
       }
-      state.totalQuantity += quantity;
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
+      state.totalQuantity += 1;
     },
     incrementQuantity: (state, action) => {
       const itemExist = state.cartItems.find(
@@ -29,7 +31,6 @@ export const cartSlice = createSlice({
         itemExist.cartQuantity += 1;
         state.totalQuantity += 1;
       }
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
     decrementQuantity: (state, action) => {
       const itemExist = state.cartItems.find(
@@ -57,7 +58,6 @@ export const cartSlice = createSlice({
           (item) => item.id !== action.payload
         );
       }
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
     getTotalAmount: (state, action) => {
       state.totalAmount = action.payload;
@@ -71,5 +71,6 @@ export const {
   decrementQuantity,
   removeItem,
   getTotalAmount,
+  listAllCarts,
 } = cartSlice.actions;
 export default cartSlice.reducer;

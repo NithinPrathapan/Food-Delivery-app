@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  removeItem,
-  decrementQuantity,
-  incrementQuantity,
-  getTotalAmount,
-} from "../../Redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getTotalAmount } from "../../Redux/cartSlice";
 
 const Cart = () => {
-  const storeCart = useSelector((state) => state.cart.cartItems);
-  console.log("store cart", storeCart);
-  const token = useSelector((state) => state.auth.userToken);
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cartData, setCartData] = useState([]);
@@ -22,21 +15,24 @@ const Cart = () => {
 
   useEffect(() => {
     getCartData();
-  }, [0]);
+  }, []);
 
   useEffect(() => {
     if (cartData) {
-      //  fetchProducts();
+      fetchProducts();
     }
   }, [cartData]);
 
   useEffect(() => {
-    // calclateTotalAmount();
+    calclateTotalAmount();
   }, [products]);
 
   const fetchProducts = async () => {
     try {
-      const productIds = Object.keys(cartData.id);
+      const productIds = [];
+      cartData.map((item) => {
+        productIds.push(item.id);
+      });
       const productPromises = productIds.map((id) =>
         axios
           .get(`http://localhost:5000/api/food/${id}`)
@@ -59,35 +55,37 @@ const Cart = () => {
           },
         });
         const cartData = response.data.data;
-        console.log(cartData);
         setCartData(cartData);
+        dispatch()
       } catch (error) {
         console.error("Error fetching cart data:", error);
       }
     } else {
-      setCartData(storeCart);
+      alert("login to vieew cart items");
     }
   };
 
   // fetch product details for each id
 
   const handleRemoveItem = async (id) => {
-    dispatch(removeItem(id));
-    const quantity = cartData[id];
+    const itemFound = cartData.find((data) => data.id === id);
+    const quantity = itemFound.quantity;
     if (token) {
       const response = await axios.post(
         `http://localhost:5000/api/cart/remove/${id}`,
-        { quantity },
+        { quantity: quantity },
         {
-          headers: { token },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
+      console.log(response);
       getCartData();
     }
   };
   const handleDecrement = async (id) => {
     const itemId = id;
-    dispatch(decrementQuantity(id));
     if (token) {
       const response = await axios.post(
         `http://localhost:5000/api/cart/remove/${itemId}`,
@@ -98,6 +96,7 @@ const Cart = () => {
           },
         }
       );
+      console.log(response.data);
       getCartData();
     }
   };
@@ -122,73 +121,94 @@ const Cart = () => {
   };
 
   const calclateTotalAmount = () => {
-    const total = products.reduce((acc, product) => {
-      return acc + product.price * cartData[product._id];
-    }, 0);
+    let total = 0;
+
+    products.forEach((item) => {
+      const itemFound = cartData.find((data) => data.id === item._id);
+      if (itemFound) {
+        total += itemFound.quantity * item.price;
+      }
+    });
+
     setTotalAmount(total);
     dispatch(getTotalAmount(total));
   };
 
+  const showQuantity = (itemId) => {
+    const item = cartData.find((item) => item.id === itemId);
+    if (item) return item.quantity;
+  };
+
+  const eachItemTotalPrice = (itemId, itemPrice) => {
+    const item = cartData.find((item) => item.id === itemId);
+    if (item) {
+      return item.quantity * itemPrice;
+    }
+  };
   return (
     <div className="mt-[100px]">
-      <div>
-        <div className=" hidden sm:grid grid-cols-6 items-center text-center justify-center text-gray-500 fin">
-          <p>Items</p>
-          <p>Title</p>
-          <p>Price</p>
-          <p>Quantity</p>
-          <p>Total</p>
-          <p>Remove</p>
-        </div>
-        <br />
-        <hr />
-        {products.map((item) => {
-          return (
-            <div key={item._id}>
-              <div
-                className=" sm:grid  sm:grid-cols-6 items-center justify-center text-center text-gray-500 my-[10px] mx-0 "
-                key={item._id}
-              >
-                <img
-                  className="w-[50px] mx-auto"
-                  src={`http://localhost:5000/api/food/images/${item.image}`}
-                  alt=""
-                />
-                <p>{item.name}</p>
-                <p>$ {item.price}</p>
-                <div className="flex gap-2 items-center justify-center  ">
-                  <button
-                    onClick={() => {
-                      handleDecrement(item._id);
-                    }}
-                    className="bg-[#fff] shadow-sm text-2xl  rounded-full w-[30px] h-[30px] text-black drop-shadow-lg font-extrabold items-center flex justify-center border-none outline-none"
-                  >
-                    -
-                  </button>
-                  <p>{cartData[item._id]}</p>
-                  <button
-                    onClick={() => {
-                      handleIncrement(item._id);
-                    }}
-                    className="bg-[#fff] shadow-sm text-2xl  rounded-full w-[30px] h-[30px] text-black drop-shadow-lg font-extrabold items-center flex justify-center border-none outline-none"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <p>$ {item.price * cartData[item._id]}</p>
-                <p
-                  onClick={() => handleRemoveItem(item._id)}
-                  className=" cursor-pointer font-semibold text-red-500 text-xl"
+      {products.length > 0 ? (
+        <div>
+          <div className=" hidden sm:grid grid-cols-6 items-center text-center justify-center text-gray-500 fin">
+            <p>Items</p>
+            <p>Title</p>
+            <p>Price</p>
+            <p>Quantity</p>
+            <p>Total</p>
+            <p>Remove</p>
+          </div>
+          <br />
+          <hr />
+          {products.map((item) => {
+            return (
+              <div key={item._id}>
+                <div
+                  className=" sm:grid  sm:grid-cols-6 items-center justify-center text-center text-gray-500 my-[10px] mx-0 "
+                  key={item._id}
                 >
-                  x
-                </p>
+                  <img
+                    className="w-[50px] mx-auto"
+                    src={`http://localhost:5000/api/food/images/${item.image}`}
+                    alt=""
+                  />
+                  <p>{item.name}</p>
+                  <p>$ {item.price}</p>
+                  <div className="flex gap-2 items-center justify-center  ">
+                    <button
+                      onClick={() => {
+                        handleDecrement(item._id);
+                      }}
+                      className="bg-[#fff] shadow-sm text-2xl  rounded-full w-[30px] h-[30px] text-black drop-shadow-lg font-extrabold items-center flex justify-center border-none outline-none"
+                    >
+                      -
+                    </button>
+                    <p>{showQuantity(item._id)}</p>
+                    <button
+                      onClick={() => {
+                        handleIncrement(item._id);
+                      }}
+                      className="bg-[#fff] shadow-sm text-2xl  rounded-full w-[30px] h-[30px] text-black drop-shadow-lg font-extrabold items-center flex justify-center border-none outline-none"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <p>$ {eachItemTotalPrice(item._id, item.price)}</p>
+                  <p
+                    onClick={() => handleRemoveItem(item._id)}
+                    className=" cursor-pointer font-semibold text-red-500 text-xl"
+                  >
+                    x
+                  </p>
+                </div>
+                <hr className="h-[1px] bg-[#e2e2e2] border-none" />
               </div>
-              <hr className="h-[1px] bg-[#e2e2e2] border-none" />
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <></>
+      )}
       {products.length > 0 ? (
         <div className="mt-[80px] sm:flex flex flex-col-reverse sm:flex-col justify-between gap-20 ">
           <div className="flex-1 flex flex-col gap-[20px]">

@@ -1,15 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FoodItem from "../FoodItem/FoodItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { listAllCarts } from "../../Redux/cartSlice";
 
 const FoodDisplay = ({ category }) => {
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
   const food_list = useSelector((state) => state.item);
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log("cart items", cartItems);
-  const getCartQuantity = (id) => {
-    const cartItem = cartItems.find((item) => item.id === id);
-    return cartItem ? cartItem.cartQuantity : 0;
+  const [cartData, setCartData] = useState([]);
+
+  useEffect(() => {
+    getCartData();
+    checkItem();
+  }, [cartData]);
+
+  // fetch all foods present in the cart and find it with the id
+  //  and then pass the cart quantity to the fooditem to display
+
+  const getCartData = async () => {
+    if (token) {
+      try {
+        const response = await axios.get("http://localhost:5000/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const cartData = response.data.data;
+        setCartData(cartData);
+        dispatch(listAllCarts(cartData));
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    }
+    checkItem();
   };
+
+  // match the item with the cartdata and return the cartQuantity and isAdded to the foodeItem component
+
+  const checkItem = (id) => {
+    const itemExist = cartData.find((item) => item.id === id);
+    if (itemExist) {
+      return itemExist.quantity;
+    }
+  };
+
   return (
     <div id="food-display " className="flex flex-col mx-0">
       <h2 className="text-2xl font-semibold flex my-3.5 ">
@@ -20,7 +55,7 @@ const FoodDisplay = ({ category }) => {
         <div className="grid grid-cols-1 lg:grid-cols-4  sm:grid-cols-2 gap-6 mt-3.5  ">
           {food_list.map((item, index) => {
             if (category === "All" || category === item.category) {
-              const cartQuantity = getCartQuantity(item._id);
+              const cartQuantity = checkItem(item._id);
               return (
                 <FoodItem key={index} item={item} cartQuantity={cartQuantity} />
               );

@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
-  const token = useSelector((state) => state.auth.userToken);
-  const { cartItems, totalAmount } = useSelector((state) => state.cart);
+  const token = localStorage.getItem("token");
   const food_list = useSelector((state) => state.item);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+
   const navigate = useNavigate();
 
-  console.log(cartItems);
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -29,7 +31,7 @@ const PlaceOrder = () => {
       cartItems.forEach((cartItem) => {
         const item = food_list.find((food) => food._id === cartItem.id);
         if (item) {
-          let itemInfo = { ...item, quantity: cartItem.cartQuantity };
+          let itemInfo = { ...item, quantity: cartItem.quantity };
           orderItem.push(itemInfo);
         }
       });
